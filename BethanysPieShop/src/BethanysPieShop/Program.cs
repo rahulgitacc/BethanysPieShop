@@ -19,13 +19,13 @@ app.UseRouting();
 app.UseEndpoints(endpoint =>
 {
     endpoint.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}"
+        name: "pie",
+        pattern: "{controller=Pie}/{action=List}/{id:int?}"
     );
 
     endpoint.MapControllerRoute(
-        name: "pie",
-        pattern: "{controller=Pie}/{action=List}"
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}"
     );
 });
 
