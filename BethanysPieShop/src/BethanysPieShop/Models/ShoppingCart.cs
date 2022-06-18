@@ -5,7 +5,9 @@ namespace BethanysPieShop.Models
     public class ShoppingCart
     {
         private readonly AppDbContext _appDbContext;
+
         public string ShoppingCartId { get; set; }
+
         public List<ShoppingCartItem> ShoppingCartItems { get; set; }
 
         private ShoppingCart(AppDbContext appDbContext)
@@ -13,24 +15,26 @@ namespace BethanysPieShop.Models
             _appDbContext = appDbContext;
         }
 
-        // check if the user has a shopping cart in the session and if not create a new one
         public static ShoppingCart GetCart(IServiceProvider service)
         {
-            ISession session = service.GetRequiredService<HttpContextAccessor>()?.HttpContext.Session;
+            ISession session = service.GetRequiredService<IHttpContextAccessor>()?
+                .HttpContext.Session;
+
             var context = service.GetService<AppDbContext>();
+
             string cartId = session.GetString("CartId") ?? Guid.NewGuid().ToString();
+
             session.SetString("CartId", cartId);
+
             return new ShoppingCart(context) { ShoppingCartId = cartId };
         }
 
-        // add item to cart
         public void AddToCart(Pie pie, int amount)
         {
-            var shoppingCartItem = _appDbContext.ShoppingCartItems.SingleOrDefault(
-                s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == ShoppingCartId
-            );
+            var shoppingCartItem =
+                    _appDbContext.ShoppingCartItems.SingleOrDefault(
+                        s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == ShoppingCartId);
 
-            // if item is not in the cart
             if (shoppingCartItem == null)
             {
                 shoppingCartItem = new ShoppingCartItem
@@ -39,22 +43,21 @@ namespace BethanysPieShop.Models
                     Pie = pie,
                     Amount = 1
                 };
+
                 _appDbContext.ShoppingCartItems.Add(shoppingCartItem);
             }
             else
             {
                 shoppingCartItem.Amount++;
             }
-
             _appDbContext.SaveChanges();
         }
 
-        // Remove item from cart
         public int RemoveFromCart(Pie pie)
         {
             var shoppingCartItem =
-                _appDbContext.ShoppingCartItems.SingleOrDefault(
-                    s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == ShoppingCartId);
+                    _appDbContext.ShoppingCartItems.SingleOrDefault(
+                        s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == ShoppingCartId);
 
             var localAmount = 0;
 
@@ -76,8 +79,6 @@ namespace BethanysPieShop.Models
             return localAmount;
         }
 
-
-        // Get all the list of shopping cart item
         public List<ShoppingCartItem> GetShoppingCartItems()
         {
             return ShoppingCartItems ??
