@@ -1,0 +1,22 @@
+{
+    "id": 1,
+    "FirstName": "Leanne",
+	"LastName": "Graham",
+    "email": "Sincere@april.biz",
+    "address": [
+	  {
+      "city": "Gwenborough",
+      "zipcode": "92998-3874"
+	  },
+	   {
+      "city": "Gwenborough",
+      "zipcode": "92998-3874"
+	  },
+	   {
+      "city": "Gwenborough",
+      "zipcode": "92998-3874"
+	  }	
+    ],
+    "phone": "1-770-736-8031 x56442",
+    "salary": "30000"
+  }
